@@ -3,6 +3,7 @@
 import React from "react";
 import { GlobalContextProvider } from "app/context/globalContextProvider";
 import { useEffect } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 function ContextProvider({ children }) {
   const [isReady, setIsReady] = React.useState(false);
@@ -22,7 +23,12 @@ function ContextProvider({ children }) {
       </div>
     );
   }
-  return <GlobalContextProvider>{children}</GlobalContextProvider>;
+  return (
+    <GlobalContextProvider>
+      <Toaster />
+      {children}
+    </GlobalContextProvider>
+  );
 }
 
 export default ContextProvider;

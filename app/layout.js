@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
         <ContextProvider>
           <GlobalStyleProvider>
             <Sidebar />
-            <div class> {children}</div>
+            <div className="w-full"> {children}</div>
           </GlobalStyleProvider>
         </ContextProvider>
       </body>
