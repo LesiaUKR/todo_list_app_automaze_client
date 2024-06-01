@@ -20,5 +20,4 @@ export const trash = <i className="fa-solid fa-trash"></i>;
 export const sortingUp = <i class="fa-solid fa-arrow-up-wide-short"></i>;
 export const sortingDown = <i class="fa-solid fa-arrow-down-short-wide"></i>;
 export const linked = <i className="fa-brands fa-linkedin"></i>;
-
 export const plus = <i className="fa-solid fa-plus fa-beat-fade"></i>;
