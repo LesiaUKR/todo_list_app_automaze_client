@@ -7,7 +7,8 @@ import TaskItem from "../TaskItem/TaskItem";
 import { add, plus } from "app/utils/icons";
 
 function Tasks({ title, tasks }) {
-  const { theme, isLoading, openModal, modal } = useGlobalState();
+  const { theme, isLoading, openModal, modal, updateTask } = useGlobalState();
+
   return (
     <main
       theme={theme}
@@ -40,13 +41,13 @@ function Tasks({ title, tasks }) {
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {tasks.map((task) => (
           <TaskItem
-            key={task.id}
+            key={task._id}
             title={task.title}
             description={task.description}
             date={task.date}
             isCompleted={task.completed}
             priority={task.priority}
-            id={task.id}
+            id={task._id}
           />
         ))}
         <button

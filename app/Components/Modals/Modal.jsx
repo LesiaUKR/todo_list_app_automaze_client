@@ -1,5 +1,5 @@
 "use client";
-import { useGlobalState } from "@/app/context/globalProvider";
+import { useGlobalState } from "app/context/globalProvider";
 import React from "react";
 
 function Modal({ content }) {

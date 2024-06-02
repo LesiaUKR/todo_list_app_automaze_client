@@ -3,9 +3,28 @@ import { edit, trash } from "app/utils/icons";
 import formatDate from "app/utils/formatDate";
 import React from "react";
 import { useGlobalState } from "app/context/globalContextProvider";
+import { updateTaskCompleted } from "services/api";
 
 function TaskItem({ title, description, date, isCompleted, id, priority }) {
-  const { theme } = useGlobalState();
+  const { theme, deleteTask, updateTask } = useGlobalState();
+
+  const handleUpdateTask = () => {
+    // Виклик функції для оновлення задачі
+    updateTask(id, updates);
+  };
+
+  const handleCompletedToggle = async () => {
+    try {
+      const updatedTask = await updateTaskCompleted(id, !isCompleted);
+      console.log("Updated task:", updatedTask);
+
+      // Update the task in the state
+      updateTask(updatedTask);
+    } catch (error) {
+      console.error("Error updating task completed status:", error);
+    }
+  };
+
   return (
     <div
       className="p-4 rounded-lg shadow-md flex flex-col gap-2"
@@ -28,28 +47,14 @@ function TaskItem({ title, description, date, isCompleted, id, priority }) {
             className={`py-2 px-4 rounded-full ${
               isCompleted ? "bg-green-600" : "bg-red-600"
             } text-white`}
-            onClick={() => {
-              const task = {
-                id,
-                isCompleted: !isCompleted,
-              };
-
-              updateTask(task);
-            }}
+            onClick={handleCompletedToggle}
           >
             Completed
           </button>
         ) : (
           <button
             className="bg-red-600 text-white rounded-full px-4 py-1"
-            onClick={() => {
-              const task = {
-                id,
-                isCompleted: !isCompleted,
-              };
-
-              updateTask(task);
-            }}
+            onClick={handleCompletedToggle}
           >
             Incomplete
           </button>
@@ -58,6 +63,7 @@ function TaskItem({ title, description, date, isCompleted, id, priority }) {
         <button
           className="text-red-600"
           onClick={() => {
+            console.log("Deleting task with ID onClick:", id);
             deleteTask(id);
           }}
         >

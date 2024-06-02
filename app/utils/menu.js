@@ -1,4 +1,4 @@
-import { list, check, todo, home } from "./icons";
+import { check, todo, home } from "./icons";
 
 const menu = [
   {
@@ -7,20 +7,15 @@ const menu = [
     icon: home,
     link: "/",
   },
+
   {
     id: 2,
-    title: "Important!",
-    icon: list,
-    link: "/important",
-  },
-  {
-    id: 3,
     title: "Completed!",
     icon: check,
     link: "/completed",
   },
   {
-    id: 4,
+    id: 3,
     title: "Do It Now",
     icon: todo,
     link: "/incomplete",

@@ -53,7 +53,6 @@ function NewTaskForm() {
       description,
       date,
       completed,
-      important,
       priority,
     };
     try {
@@ -139,19 +138,7 @@ function NewTaskForm() {
           Toggle Completed
         </label>
       </div>
-      <div className="mb-6">
-        <label htmlFor="important" className="flex items-center cursor-pointer">
-          <input
-            value={important.toString()}
-            onChange={handleChange("important")}
-            type="checkbox"
-            name="important"
-            id="important"
-            className="mr-2"
-          />
-          Toggle Important
-        </label>
-      </div>
+
       <div className="flex flex-col mb-6 space-y-2 p-2 w-60">
         <input
           type="range"
