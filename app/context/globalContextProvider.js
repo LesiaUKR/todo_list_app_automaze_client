@@ -1,6 +1,6 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+
 import themes from "./theme";
 import {
   getAllTasks,
@@ -17,8 +17,9 @@ export const GlobalContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [modal, setModal] = useState(false);
-  const theme = themes[selectedThemeIndex];
   const [searchQuery, setSearchQuery] = useState("");
+
+  const theme = themes[selectedThemeIndex];
 
   const openModal = () => {
     setModal(true);
@@ -94,7 +95,6 @@ export const GlobalContextProvider = ({ children }) => {
 
   const completedTasks = tasks.filter((task) => task.completed);
   const inCompletedTasks = tasks.filter((task) => !task.completed);
-  const filteredTasks = filterTasks(tasks, searchQuery);
 
   useEffect(() => {
     allTasks();
@@ -117,7 +117,7 @@ export const GlobalContextProvider = ({ children }) => {
         allTasks,
         searchQuery,
         setSearchQuery,
-        filteredTasks,
+        filterTasks,
       }}
     >
       <GlobalUpdateContext.Provider value={{ setSelectedThemeIndex }}>

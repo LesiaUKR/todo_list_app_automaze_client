@@ -1,15 +1,39 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useGlobalState } from "app/context/globalContextProvider";
 import SearchBar from "../Searchbar/Searchbar";
 import NewTaskForm from "../Modals/NewTaskForm";
 import TaskItem from "../TaskItem/TaskItem";
-import { add, plus } from "app/utils/icons";
 import Modal from "../Modals/Modal";
+import { add, plus } from "app/utils/icons";
+import PrioritySorting from "../PrioritySorting/PrioritySorting";
 
 function Tasks({ title, tasks }) {
-  const { theme, isLoading, openModal, modal, filteredTasks } =
+  const { theme, isLoading, openModal, modal, searchQuery, filterTasks } =
     useGlobalState();
+
+  const [taskList, setTaskList] = useState(tasks);
+
+  useEffect(() => {
+    setTaskList(tasks);
+  }, [tasks]);
+
+  const filteredTasks = filterTasks(taskList, searchQuery);
+
+  const handlePrioritySort = (order) => {
+    const sortedTasks = [...filteredTasks].sort((a, b) => {
+      const firstTask = a.priority;
+      const secondTask = b.priority;
+
+      if (order === "asc") {
+        return firstTask - secondTask;
+      } else {
+        return secondTask - firstTask;
+      }
+    });
+
+    setTaskList(sortedTasks); // Update the taskList state with the sorted tasks
+  };
 
   return (
     <main
@@ -23,6 +47,7 @@ function Tasks({ title, tasks }) {
     >
       {modal && <Modal content={<NewTaskForm />} />}
       <SearchBar />
+      <PrioritySorting onSort={handlePrioritySort} />
       <button
         className="fixed flex items-center justify-center w-12 h-12 rounded-full shadow-lg md:top-12 md:right-14"
         style={{

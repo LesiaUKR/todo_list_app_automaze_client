@@ -17,7 +17,9 @@ export const users = <i className="fa-solid fa-user-group"></i>;
 export const todo = <i className="fa-solid fa-clipboard-list"></i>;
 export const down = <i className="fa-solid fa-caret-down"></i>;
 export const trash = <i className="fa-solid fa-trash"></i>;
-export const sortingUp = <i class="fa-solid fa-arrow-up-wide-short"></i>;
-export const sortingDown = <i class="fa-solid fa-arrow-down-short-wide"></i>;
+export const sortingUp = <i className="fa-solid fa-arrow-up-wide-short"></i>;
+export const sortingDown = (
+  <i className="fa-solid fa-arrow-down-short-wide"></i>
+);
 export const linked = <i className="fa-brands fa-linkedin"></i>;
 export const plus = <i className="fa-solid fa-plus fa-beat-fade"></i>;
