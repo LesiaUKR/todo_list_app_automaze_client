@@ -6,7 +6,8 @@ import { useGlobalState } from "app/context/globalContextProvider";
 import { updateTaskCompleted } from "services/api";
 
 function TaskItem({ title, description, date, isCompleted, id, priority }) {
-  const { theme, deleteTask, updateTask } = useGlobalState();
+  const { theme, deleteTask, updateTask, updateTaskCompletedStatus } =
+    useGlobalState();
 
   const handleUpdateTask = () => {
     // Виклик функції для оновлення задачі
@@ -15,11 +16,7 @@ function TaskItem({ title, description, date, isCompleted, id, priority }) {
 
   const handleCompletedToggle = async () => {
     try {
-      const updatedTask = await updateTaskCompleted(id, !isCompleted);
-      console.log("Updated task:", updatedTask);
-
-      // Update the task in the state
-      updateTask(updatedTask);
+      await updateTaskCompletedStatus(id, !isCompleted);
     } catch (error) {
       console.error("Error updating task completed status:", error);
     }
@@ -53,7 +50,7 @@ function TaskItem({ title, description, date, isCompleted, id, priority }) {
           </button>
         ) : (
           <button
-            className="bg-red-600 text-white rounded-full px-4 py-1"
+            className="bg-red-600 text-white py-2 px-4 rounded-full"
             onClick={handleCompletedToggle}
           >
             Incomplete

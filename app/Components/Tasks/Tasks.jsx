@@ -5,9 +5,11 @@ import SearchBar from "../Searchbar/Searchbar";
 import NewTaskForm from "../Modals/NewTaskForm";
 import TaskItem from "../TaskItem/TaskItem";
 import { add, plus } from "app/utils/icons";
+import Modal from "../Modals/Modal";
 
 function Tasks({ title, tasks }) {
-  const { theme, isLoading, openModal, modal, updateTask } = useGlobalState();
+  const { theme, isLoading, openModal, modal, filteredTasks } =
+    useGlobalState();
 
   return (
     <main
@@ -19,6 +21,7 @@ function Tasks({ title, tasks }) {
         scrollbarWidth: "thin",
       }}
     >
+      {modal && <Modal content={<NewTaskForm />} />}
       <SearchBar />
       <button
         className="fixed flex items-center justify-center w-12 h-12 rounded-full shadow-lg md:top-12 md:right-14"
@@ -39,7 +42,7 @@ function Tasks({ title, tasks }) {
 
       <h1>{title}</h1>
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {tasks.map((task) => (
+        {filteredTasks.map((task) => (
           <TaskItem
             key={task._id}
             title={task.title}
@@ -62,7 +65,7 @@ function Tasks({ title, tasks }) {
           Add New Task
         </button>
       </div>
-      <NewTaskForm />
+      {/* <NewTaskForm /> */}
     </main>
   );
 }

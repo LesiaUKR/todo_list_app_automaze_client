@@ -7,7 +7,15 @@ const axiosInterceptorInstance = axios.create({
 export const getAllTasks = async () => {
   try {
     const res = await axiosInterceptorInstance.get("/api/tasks");
-    console.log(res.data);
+    return res.data;
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+export const createTask = async (task) => {
+  try {
+    const res = await axiosInterceptorInstance.post("/api/tasks", task);
     return res.data;
   } catch (e) {
     console.error(e);
@@ -28,27 +36,26 @@ export const updateTaskById = async (id, updatedTask) => {
     throw error;
   }
 };
-
 export const updateTaskCompleted = async (id, isCompleted) => {
   try {
-    console.log("Updating task completed status with ID:", id);
     const response = await axiosInterceptorInstance.patch(
       `/api/tasks/${id}/completed`,
-      { completed: isCompleted }
+      {
+        completed: isCompleted,
+      }
     );
-    console.log("Response:", response.data);
+
     return response.data;
   } catch (error) {
-    console.error("Error updating task completed status:", error.response.data);
+    console.log("Error updating task completed status:", error.response?.data);
     throw error;
   }
 };
 
 export const deleteTaskById = async (id) => {
   try {
-    console.log("Deleting task with ID:", id);
     const response = await axiosInterceptorInstance.delete(`/api/tasks/${id}`);
-    console.log("Response:", response.data);
+
     return response.data;
   } catch (error) {
     console.error("Error deleting task:", error.response.data);

@@ -15,7 +15,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
-    "styled-components": "^6.1.11"
+    "styled-components": "^6.1.11",
+    "use-debounce": "^10.0.1"
   },
   "devDependencies": {
     "eslint": "^8",

@@ -1,8 +1,13 @@
 "use client";
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import themes from "./theme";
-import { getAllTasks, deleteTaskById } from "services/api";
-import { updateTaskById } from "./../../services/api";
+import {
+  getAllTasks,
+  deleteTaskById,
+  updateTaskCompleted,
+  updateTaskById,
+} from "services/api";
 
 export const GlobalContext = createContext();
 export const GlobalUpdateContext = createContext();
@@ -13,6 +18,7 @@ export const GlobalContextProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
   const [modal, setModal] = useState(false);
   const theme = themes[selectedThemeIndex];
+  const [searchQuery, setSearchQuery] = useState("");
 
   const openModal = () => {
     setModal(true);
@@ -26,7 +32,6 @@ export const GlobalContextProvider = ({ children }) => {
     setIsLoading(true);
     try {
       const data = await getAllTasks();
-      console.log(data);
 
       setTasks(data);
 
@@ -68,9 +73,9 @@ export const GlobalContextProvider = ({ children }) => {
     setIsLoading(true);
     try {
       const updatedTask = await updateTaskCompleted(id, isCompleted);
-      console.log("Updated task:", updatedTask);
 
       setTasks(tasks.map((task) => (task._id === id ? updatedTask : task)));
+      return updatedTask;
     } catch (error) {
       console.log("Error updating task completed status:", error);
     } finally {
@@ -78,8 +83,18 @@ export const GlobalContextProvider = ({ children }) => {
     }
   };
 
+  const filterTasks = (tasks, query) => {
+    if (!query) return tasks;
+    return tasks.filter(
+      (task) =>
+        task.title.toLowerCase().includes(query.toLowerCase()) ||
+        task.description.toLowerCase().includes(query.toLowerCase())
+    );
+  };
+
   const completedTasks = tasks.filter((task) => task.completed);
   const inCompletedTasks = tasks.filter((task) => !task.completed);
+  const filteredTasks = filterTasks(tasks, searchQuery);
 
   useEffect(() => {
     allTasks();
@@ -99,6 +114,10 @@ export const GlobalContextProvider = ({ children }) => {
         inCompletedTasks,
         updateTask,
         updateTaskCompletedStatus,
+        allTasks,
+        searchQuery,
+        setSearchQuery,
+        filteredTasks,
       }}
     >
       <GlobalUpdateContext.Provider value={{ setSelectedThemeIndex }}>

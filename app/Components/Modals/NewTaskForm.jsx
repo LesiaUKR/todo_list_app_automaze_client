@@ -3,15 +3,14 @@
 import { useGlobalState } from "app/context/globalContextProvider";
 import { useState } from "react";
 import { add } from "app/utils/icons";
-import axios from "axios";
+import { createTask } from "services/api";
 
 function NewTaskForm() {
-  const { theme } = useGlobalState();
+  const { theme, closeModal, allTasks } = useGlobalState();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState("");
   const [completed, setCompleted] = useState(false);
-  const [important, setImportant] = useState(false);
   const [priority, setValuePriority] = useState(1);
 
   // console.log(title);
@@ -35,9 +34,6 @@ function NewTaskForm() {
       case "completed":
         setCompleted(e.target.checked);
         break;
-      case "important":
-        setImportant(e.target.checked);
-        break;
       case "priority":
         setValuePriority(e.target.value);
         break;
@@ -56,10 +52,12 @@ function NewTaskForm() {
       priority,
     };
     try {
-      const res = await axios.post("/api/tasks", task);
+      const res = await createTask(task);
       if (res.status === 200) {
         toast.success("Task created successfully");
       }
+      allTasks();
+      closeModal();
     } catch (error) {
       toast.error("An error occurred while creating the task");
       console.log(error);
@@ -140,6 +138,9 @@ function NewTaskForm() {
       </div>
 
       <div className="flex flex-col mb-6 space-y-2 p-2 w-60">
+        <label htmlFor="priority" className="flex items-center cursor-pointer">
+          Priority
+        </label>
         <input
           type="range"
           className="w-full"
@@ -150,6 +151,7 @@ function NewTaskForm() {
           step="1"
           name="priority"
         />
+
         <ul className="flex justify-between w-full px-[10px]">
           <li className="flex justify-center relative">
             <span className="absolute">1</span>
@@ -187,9 +189,10 @@ function NewTaskForm() {
         <button
           type="submit"
           name="Create Task"
-          className="px-4 py-2 font-medium text-white bg-blue-500 rounded hover:bg-blue-600 fw-500 fs-1.2rem "
+          className="px-4 py-2 font-medium text-white bg-green-600 rounded hover:bg-blue-600 fw-500 fs-1.2rem "
         >
           {add}
+          <span>Create Task</span>
         </button>
       </div>
     </form>
