@@ -1,15 +1,15 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useGlobalState } from "app/context/globalContextProvider";
+import { add } from "app/utils/icons";
 import SearchBar from "../Searchbar/Searchbar";
 import NewTaskForm from "../Modals/NewTaskForm";
 import TaskItem from "../TaskItem/TaskItem";
 import Modal from "../Modals/Modal";
-import { add, plus } from "app/utils/icons";
 import PrioritySorting from "../PrioritySorting/PrioritySorting";
 
 function Tasks({ title, tasks }) {
-  const { theme, isLoading, openModal, modal, searchQuery, filterTasks } =
+  const { theme, openModal, modal, modalContent, searchQuery, filterTasks } =
     useGlobalState();
 
   const [taskList, setTaskList] = useState(tasks);
@@ -32,7 +32,7 @@ function Tasks({ title, tasks }) {
       }
     });
 
-    setTaskList(sortedTasks); // Update the taskList state with the sorted tasks
+    setTaskList(sortedTasks);
   };
 
   return (
@@ -45,28 +45,13 @@ function Tasks({ title, tasks }) {
         scrollbarWidth: "thin",
       }}
     >
-      {modal && <Modal content={<NewTaskForm />} />}
+      {modal && <Modal content={modalContent} />}
       <SearchBar />
       <PrioritySorting onSort={handlePrioritySort} />
-      <button
-        className="fixed flex items-center justify-center w-12 h-12 rounded-full shadow-lg md:top-12 md:right-14"
-        style={{
-          top: "3rem",
-          right: "3.5rem",
-          backgroundColor: theme.colorBg,
-          borderColor: theme.borderColor2,
-          color: theme.colorGrey2,
-          fontSize: "1.4rem",
-          boxShadow: "0 3px 15px rgba(0, 0, 0, 0.3)",
-          border: "2px solid",
-        }}
-        onClick={openModal}
-      >
-        {plus}
-      </button>
 
-      <h1>{title}</h1>
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <h1 className="px-4">{title}</h1>
+
+      <div className="px-4 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {filteredTasks.map((task) => (
           <TaskItem
             key={task._id}
@@ -76,6 +61,7 @@ function Tasks({ title, tasks }) {
             isCompleted={task.completed}
             priority={task.priority}
             id={task._id}
+            task={task}
           />
         ))}
         <button
@@ -84,13 +70,12 @@ function Tasks({ title, tasks }) {
             color: theme.colorGrey2,
             borderColor: theme.colorGrey5,
           }}
-          onClick={openModal}
+          onClick={() => openModal(<NewTaskForm />)}
         >
           {add}
           Add New Task
         </button>
       </div>
-      {/* <NewTaskForm /> */}
     </main>
   );
 }

@@ -17,16 +17,19 @@ export const GlobalContextProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [modal, setModal] = useState(false);
+  const [modalContent, setModalContent] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   const theme = themes[selectedThemeIndex];
 
-  const openModal = () => {
+  const openModal = (content) => {
+    setModalContent(content);
     setModal(true);
   };
 
   const closeModal = () => {
     setModal(false);
+    setModalContent(null);
   };
 
   const allTasks = async () => {
@@ -34,7 +37,13 @@ export const GlobalContextProvider = ({ children }) => {
     try {
       const data = await getAllTasks();
 
-      setTasks(data);
+      const sortedTasks = data.sort((a, b) => {
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      });
+
+      setTasks(sortedTasks);
 
       setIsLoading(false);
     } catch (error) {
@@ -107,6 +116,7 @@ export const GlobalContextProvider = ({ children }) => {
         tasks,
         isLoading,
         modal,
+        modalContent,
         openModal,
         closeModal,
         deleteTask,

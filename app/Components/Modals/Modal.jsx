@@ -1,34 +1,7 @@
-// "use client";
-// import { useGlobalState } from "app/context/globalProvider";
-// import React from "react";
-
-// function Modal({ content }) {
-//   const { closeModal, theme } = useGlobalState();
-
-//   return (
-//     <div className="fixed inset-0 flex justify-center items-center z-50">
-//       <div
-//         className="absolute inset-0 bg-black bg-opacity-45 backdrop-filter backdrop-blur-sm"
-//         onClick={closeModal}
-//       ></div>
-//       <div
-//         className="relative mx-4 p-8 max-w-lg w-full rounded-lg shadow-lg"
-//         style={{
-//           backgroundColor: theme.colorBg2,
-//           borderRadius: theme.borderRadiusMd2,
-//         }}
-//       >
-//         {content}
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Modal;
 "use client";
-import { useGlobalState } from "app/context/globalContextProvider";
 import React from "react";
-import styled from "styled-components";
+import { useGlobalState } from "app/context/globalContextProvider";
+import { ModalStyled } from "./Modal.styled";
 
 function Modal({ content }) {
   const { closeModal, theme } = useGlobalState();
@@ -40,47 +13,5 @@ function Modal({ content }) {
     </ModalStyled>
   );
 }
-
-const ModalStyled = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  z-index: 100;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  .modal-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.45);
-    filter: blur(4px);
-  }
-
-  .modal-content {
-    margin: 0 1rem;
-
-    padding: 2rem;
-    position: relative;
-    max-width: 630px;
-    width: 100%;
-    z-index: 100;
-
-    border-radius: 1rem;
-    background-color: ${(props) => props.theme.colorBg2};
-    box-shadow: 0 0 1rem rgba(0, 0, 0, 0.3);
-    border-radius: ${(props) => props.theme.borderRadiusMd2};
-
-    @media screen and (max-width: 450px) {
-      font-size: 90%;
-    }
-  }
-`;
 
 export default Modal;

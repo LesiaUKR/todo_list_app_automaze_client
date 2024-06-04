@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { SidebarStyled } from "./Sidebar.styled";
 import { useGlobalState } from "app/context/globalContextProvider";
 import menu from "app/utils/menu";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 
 function Sidebar() {
   const { theme } = useGlobalState();

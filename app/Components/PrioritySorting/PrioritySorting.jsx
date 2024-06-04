@@ -11,10 +11,12 @@ function PrioritySorting({ onSort }) {
   };
 
   return (
-    <button onClick={handleClick}>
-      <span>Priority</span>
-      {sortOrder === "asc" ? sortingUp : sortingDown}
-    </button>
+    <div className="flex justify-end mb-6 pr-4">
+      <button className="flex items-center gap-2" onClick={handleClick}>
+        <span>Priority</span>
+        {sortOrder === "asc" ? sortingUp : sortingDown}
+      </button>
+    </div>
   );
 }
 

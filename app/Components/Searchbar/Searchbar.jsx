@@ -24,7 +24,7 @@ function SearchBar() {
   }, 300);
 
   return (
-    <form className="px-4 w-full">
+    <form className="mb-10 px-4 w-full">
       <div className="relative">
         <input
           placeholder="Search task..."

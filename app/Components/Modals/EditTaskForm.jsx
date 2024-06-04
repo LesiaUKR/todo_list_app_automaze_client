@@ -1,66 +1,66 @@
-"use client";
-
+import React, { useEffect, useState } from "react";
 import { useGlobalState } from "app/context/globalContextProvider";
-import { useState } from "react";
 import { add } from "app/utils/icons";
-import { createTask } from "services/api";
+import { updateTaskById } from "services/api";
 
-function NewTaskForm() {
-  const { theme, closeModal, allTasks } = useGlobalState();
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
-  const [completed, setCompleted] = useState(false);
-  const [priority, setValuePriority] = useState(1);
+function EditTaskForm({ task }) {
+  const { theme, allTasks, closeModal } = useGlobalState();
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    date: "",
+    completed: false,
+    priority: 1,
+  });
 
-  const handleChange = (name) => (e) => {
-    switch (name) {
-      case "title":
-        setTitle(e.target.value);
-        break;
-      case "description":
-        setDescription(e.target.value);
-        break;
-      case "date":
-        setDate(e.target.value);
-        break;
-      case "completed":
-        setCompleted(e.target.checked);
-        break;
-      case "priority":
-        setValuePriority(e.target.value);
-        break;
-      default:
-        break;
-    }
+  const convertToYYYYMMDD = (dateDDMMYYYY) => {
+    const parts = dateDDMMYYYY.split("-");
+
+    return parts.length === 3 ? `${parts[2]}-${parts[1]}-${parts[0]}` : "";
   };
+
+  const dateYYYYMMDD = convertToYYYYMMDD(task.date);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  useEffect(() => {
+    if (task) {
+      setFormData({
+        title: task.title || "",
+        description: task.description || "",
+        date: dateYYYYMMDD || "",
+        completed: task.completed || false,
+        priority: task.priority || 1,
+      });
+    }
+  }, [task, dateYYYYMMDD]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formattedDate = date.split("-").reverse().join("-");
-    const task = {
-      title,
-      description,
-      date: formattedDate,
-      completed,
-      priority,
-    };
     try {
-      const res = await createTask(task);
-      if (res.status === 200) {
-        toast.success("Task created successfully");
-      }
-      allTasks();
-      closeModal();
+      // Створюємо новий об'єкт без поля _id
+      const { _id, ...taskData } = formData;
+      const updatedTask = { ...taskData };
+      console.log("task._id", task._id);
+      await updateTaskById(task._id, updatedTask);
+      allTasks(); //
+      closeModal(); // Закриваємо модальне вікно
     } catch (error) {
-      toast.error("An error occurred while creating the task");
-      console.log(error);
+      console.error("Error updating task:", error);
     }
   };
 
+  const { title, description, date, completed, priority } = formData;
+
   return (
     <form theme={theme} onSubmit={handleSubmit}>
-      <h1 className="text-xl font-semibold mb-4">Create task</h1>
+      <h1 className="text-xl font-semibold mb-4">Edit task</h1>
       <div className="mb-6">
         <label
           htmlFor="title"
@@ -72,9 +72,9 @@ function NewTaskForm() {
         <input
           type="text"
           id="title"
-          value={title}
           name="title"
-          onChange={handleChange("title")}
+          value={title}
+          onChange={handleChange}
           placeholder="e.g, Watch a video from Fireship."
           className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
           style={{ backgroundColor: theme.colorGrey3 }}
@@ -90,7 +90,7 @@ function NewTaskForm() {
         </label>
         <textarea
           value={description}
-          onChange={handleChange("description")}
+          onChange={handleChange}
           name="description"
           id="description"
           rows={4}
@@ -109,7 +109,7 @@ function NewTaskForm() {
         </label>
         <input
           value={date}
-          onChange={handleChange("date")}
+          onChange={handleChange}
           type="date"
           name="date"
           id="date"
@@ -120,8 +120,8 @@ function NewTaskForm() {
       <div className="mb-6">
         <label htmlFor="completed" className="flex items-center cursor-pointer">
           <input
-            value={completed.toString()}
-            onChange={handleChange("completed")}
+            checked={completed}
+            onChange={handleChange}
             type="checkbox"
             name="completed"
             id="completed"
@@ -138,7 +138,7 @@ function NewTaskForm() {
         <input
           type="range"
           className="w-full"
-          onChange={handleChange("priority")}
+          onChange={handleChange}
           value={priority}
           min="1"
           max="10"
@@ -186,11 +186,11 @@ function NewTaskForm() {
           className="px-4 py-2 font-medium text-white bg-green-600 rounded hover:bg-blue-600 fw-500 fs-1.2rem "
         >
           {add}
-          <span>Create Task</span>
+          <span>Update Task</span>
         </button>
       </div>
     </form>
   );
 }
 
-export default NewTaskForm;
+export default EditTaskForm;

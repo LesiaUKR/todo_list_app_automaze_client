@@ -1,18 +1,20 @@
 "use client";
 import { edit, trash } from "app/utils/icons";
-import formatDate from "app/utils/formatDate";
 import React from "react";
 import { useGlobalState } from "app/context/globalContextProvider";
-import { updateTaskCompleted } from "services/api";
+import EditTaskForm from "../Modals/EditTaskForm";
 
-function TaskItem({ title, description, date, isCompleted, id, priority }) {
-  const { theme, deleteTask, updateTask, updateTaskCompletedStatus } =
+function TaskItem({
+  title,
+  description,
+  date,
+  isCompleted,
+  id,
+  priority,
+  task,
+}) {
+  const { theme, deleteTask, updateTaskCompletedStatus, openModal } =
     useGlobalState();
-
-  const handleUpdateTask = () => {
-    // Виклик функції для оновлення задачі
-    updateTask(id, updates);
-  };
 
   const handleCompletedToggle = async () => {
     try {
@@ -20,6 +22,10 @@ function TaskItem({ title, description, date, isCompleted, id, priority }) {
     } catch (error) {
       console.error("Error updating task completed status:", error);
     }
+  };
+
+  const handleEditClick = () => {
+    openModal(<EditTaskForm task={task} />);
   };
 
   return (
@@ -37,7 +43,7 @@ function TaskItem({ title, description, date, isCompleted, id, priority }) {
         <p>{priority}</p>
       </div>
       <p>{description}</p>
-      <p className="mt-auto">{formatDate(date)}</p>
+      <p className="mt-auto">{date}</p>
       <div className="flex items-center gap-4 mt-4">
         {isCompleted ? (
           <button
@@ -56,7 +62,9 @@ function TaskItem({ title, description, date, isCompleted, id, priority }) {
             Incomplete
           </button>
         )}
-        <button className="ml-auto">{edit}</button>
+        <button className="ml-auto" onClick={handleEditClick}>
+          {edit}
+        </button>
         <button
           className="text-red-600"
           onClick={() => {
